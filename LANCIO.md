@@ -28,31 +28,39 @@ git status
 
 ## 🔧 Cosa devi fare tu
 
-### 1. Crea il repo su GitHub (2 min)
+### 1+2. Crea repo + push con GitHub Desktop (consigliato, 3 min)
 
-1. Vai su [github.com/new](https://github.com/new).
-2. **Repository name:** `cibopermente`
-3. **Public** (obbligatorio per GitHub Pages gratis).
-4. **NON** spuntare "Add a README" / "Add .gitignore" / "Choose a license" — abbiamo già tutto in locale.
-5. Click **Create repository**.
+Hai già **GitHub Desktop** installato — è il modo più semplice, niente CLI:
 
-### 2. Push del codice (1 min)
+1. Apri **GitHub Desktop**.
+2. Menu **File → Add Local Repository...**
+3. Click **Choose...** e seleziona la cartella:
+   `C:\Users\DAVIDE\Desktop\Claude_Workspace\projects\cibo-per-la-mente`
+4. Click **Add Repository**. Vedrai il commit `First release` già pronto.
+5. In alto a destra apparirà il bottone **Publish repository**. Cliccalo.
+6. Nella finestra:
+   - **Name:** `cibopermente`
+   - **Description:** `Mini-giochi italiani per il cellulare`
+   - **DESELEZIONA** "Keep this code private" (deve essere pubblico per GitHub Pages gratis).
+7. Click **Publish repository**.
 
-Apri PowerShell e incolla (è già configurato col tuo username Ranzo1985):
+Fatto. Il repo è online su `https://github.com/Ranzo1985/cibopermente`.
 
-```powershell
-cd "c:\Users\DAVIDE\Desktop\Claude_Workspace\projects\cibo-per-la-mente"
-git remote add origin https://github.com/Ranzo1985/cibopermente.git
-git push -u origin main
-```
+### 1+2 (alternativa) Da PowerShell, se preferisci
 
-Ti chiederà autenticazione: usa il **token personale** GitHub (non la password — GitHub non accetta più password da CLI). Se non ne hai uno:
-- Vai su [github.com/settings/tokens/new](https://github.com/settings/tokens/new)
-- Note: `cli push`
-- Expiration: 90 giorni (o no expiration)
-- Scope: spunta solo **`repo`**
-- Generate → copia il token (lungo, inizia con `ghp_`)
-- Quando PowerShell chiede password, incolla il token
+<details>
+<summary>Click per espandere</summary>
+
+1. Crea il repo vuoto su [github.com/new](https://github.com/new): nome `cibopermente`, Public, NON aggiungere file iniziali.
+2. Da PowerShell:
+   ```powershell
+   cd "c:\Users\DAVIDE\Desktop\Claude_Workspace\projects\cibo-per-la-mente"
+   git remote add origin https://github.com/Ranzo1985/cibopermente.git
+   git push -u origin main
+   ```
+3. Se chiede credenziali e fallisce, serve un Personal Access Token: [github.com/settings/tokens/new](https://github.com/settings/tokens/new), scope `repo`, copialo, incollalo come password.
+
+</details>
 
 ### 3. Attiva GitHub Pages (1 min)
 
