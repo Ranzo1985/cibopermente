@@ -20,4 +20,4 @@ Niente account, niente cookie di tracciamento, niente pubblicità — solo un pi
 
 ---
 
-di [Davide Miori](mailto:davide.miori@mioriconsulting.com)
+di [Davide Miori](mailto:davide.miori@hotmail.com)
