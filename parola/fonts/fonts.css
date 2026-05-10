@@ -1,0 +1,26 @@
+/* Self-hosted Google Fonts (subset latino) — privacy-friendly: nessun dato esce verso Google */
+
+/* Fraunces — variable font, copre tutti i pesi 500-900 con un solo file */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 500 900;
+  font-display: swap;
+  src: url('Fraunces.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 500 900;
+  font-display: swap;
+  src: url('Fraunces-Italic.woff2') format('woff2');
+}
+
+/* Inter — variable font, copre i pesi 400-700 con un solo file */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('Inter.woff2') format('woff2');
+}

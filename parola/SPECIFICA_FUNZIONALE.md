@@ -224,9 +224,14 @@ projects/cibo-per-la-mente/
 - Dichiarazione "no email, no cookie, no profilazione, no pubblicità".
 - Cosa raccogliamo: statistiche aggregate via Umami Cloud (anonime, IP solo per derivare paese poi scartato).
 - localStorage spiegato (resta sul dispositivo, mai inviato).
-- Servizi terzi elencati: GitHub Pages, Umami, Google Fonts.
-- Diritti GDPR + email contatto: davide.miori@mioriconsulting.com.
+- Servizi terzi elencati: GitHub Pages, Umami (font self-hostati, no Google).
+- Diritti GDPR completi: 7 diritti enumerati con riferimenti articoli + reclamo al Garante.
+- Email contatto: davide.miori@hotmail.com.
 - Titolare del trattamento: Davide Miori.
+- Sezione "Modifiche all'informativa" per gestire futuri update (es. inserimento ads).
+
+**Hardening privacy fatto:**
+- Font Fraunces + Inter **self-hostati** in `parola/fonts/` (3 file woff2, ~108KB tot). Nessuna chiamata a `fonts.googleapis.com` o `fonts.gstatic.com` — risolve il rischio "Google Fonts CDN" (sentenza tedesca 2022).
 
 **Open Graph / WhatsApp preview:**
 - Meta tag completi (`og:title`, `og:description`, `og:image`, `og:locale=it_IT`).
