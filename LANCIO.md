@@ -117,6 +117,80 @@ Tre o quattro contatti per partire — gente che apprezza i giochini di parole. 
 - **Distribuzione partite per difficoltà** (capire cosa preferisce la gente)
 - **Win rate** (se troppo basso → parole troppo difficili)
 
+### Dove trovare ogni metrica su Umami (5 min/settimana)
+
+Vai su [cloud.umami.is](https://cloud.umami.is), login, click sul sito "Cibo per la Mente". In alto a destra c'è il selettore di periodo: per il check settimanale metti **"Last 7 days"**.
+
+#### 1. Visitatori unici
+In cima al dashboard vedi **3 numeri principali**:
+- **Views** = quante pagine sono state aperte in totale
+- **Visits** = quante sessioni (una persona può fare più sessioni se torna in giorni diversi)
+- **Visitors** = quante **persone diverse** ← *questa è la metrica che conta*
+
+Per confrontare con la settimana prima: cambia il filtro a "Last 30 days" e guarda il grafico — vedi se la linea sale, è piatta o scende.
+
+**Riferimenti realistici:**
+| Periodo | Visitors | Cosa significa |
+|---------|----------|----------------|
+| Settimana 1 | 5-15 | Solo amici e famiglia ✓ |
+| Mese 1 | 30-80 | Passaparola che funziona ✓ |
+| Mese 3 | 150-400 | Sta girando bene ✓ |
+| Mese 6 | 1.000+ | Inizia a essere un sito vero |
+
+#### 2. Visite ripetute (retention)
+Umami non te la dà direttamente — la calcoli a mente con i 3 numeri sopra:
+
+> **Visite ripetute** = `Visits ÷ Visitors`
+
+| Risultato | Cosa vuol dire |
+|-----------|----------------|
+| ~1,0 | La gente apre una volta e non torna più → 🔴 problema (gioco non interessa, parole strane, bug) |
+| 1,3-1,8 | Curiosità ma poca abitudine → 🟡 ok per partire, da far crescere |
+| 2,0-3,5 | Tornano più volte → 🟢 il prodotto piace |
+| > 4,0 | Abitudine quotidiana → 🟢🟢 ottimo |
+
+Esempio: Visits=240, Visitors=80 → 240/80 = **3,0 visite a persona** = la gente torna.
+
+#### 3. Distribuzione partite per difficoltà
+Scrolla giù fino alla sezione **"Events"** (di solito sotto "Browsers"/"Devices"). Vedi una lista del tipo:
+```
+game-start    412
+game-won      287
+game-lost      63
+```
+
+Per vedere la **distribuzione per difficoltà**, click sul nome dell'evento (es. `game-start`). Si apre un pannello con le **proprietà**: vedi una tabella tipo:
+```
+difficulty: 4  →  72
+difficulty: 5  →  198
+difficulty: 6  →  102
+difficulty: 7  →  40
+```
+
+→ in questo esempio la maggioranza preferisce **Normale (5 lettere)**.
+
+#### 4. Win rate per difficoltà
+Anche qui calcolo a mano. Per ogni livello:
+
+> **Win rate** = `game-won (livello X)` ÷ `[game-won (X) + game-lost (X)]`
+
+Click su `game-won` → vedi i conteggi per difficoltà. Stessa cosa con `game-lost`. Sommi e dividi.
+
+| Win rate | Cosa fare |
+|----------|-----------|
+| > 90% | 🔵 Troppo facile, parole banali → curare meglio la lista soluzioni |
+| 60-85% | 🟢 Sfida giusta, gente esce contenta |
+| 30-55% | 🟡 Difficile ma motivante, ok per "Difficile/Estremo" |
+| < 25% | 🔴 Troppo duro, demotivante → ribassare o aggiungere aiuti |
+
+#### Esempio di review settimanale (template mentale)
+
+> *"Settimana del 15-21 maggio: 47 Visitors, 112 Visits → 2,4 visite a persona, retention buona.
+> Difficile e Normale dominano (40+30 partite) vs Facile/Estremo (10+5).
+> Win rate Normale: 65% — perfetto. Estremo: 18% — un po' troppo duro, vedo se ridurre le parole più rare."*
+
+5 minuti, ti basta per capire se il prodotto sta crescendo e dove intervenire.
+
 ### Soglie indicative per valutare ads
 | Visitatori unici / mese | Cosa fare |
 |-------------------------|-----------|
