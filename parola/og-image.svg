@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="bg1" cx="80%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#E5A845" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#FBF3E4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bg2" cx="20%" cy="90%" r="70%">
+      <stop offset="0%" stop-color="#D26A4F" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#FBF3E4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Sfondo crema -->
+  <rect width="1200" height="630" fill="#FBF3E4"/>
+  <rect width="1200" height="630" fill="url(#bg1)"/>
+  <rect width="1200" height="630" fill="url(#bg2)"/>
+
+  <!-- Lettere decorative di sfondo -->
+  <g font-family="Georgia, serif" font-style="italic" font-weight="900" opacity="0.10">
+    <text x="60" y="180" font-size="180" fill="#D26A4F">C</text>
+    <text x="1020" y="200" font-size="140" fill="#E5A845">I</text>
+    <text x="1080" y="500" font-size="160" fill="#8FAD7E">O</text>
+    <text x="80" y="560" font-size="190" fill="#6B9CB8">M</text>
+  </g>
+
+  <!-- Logo brand al centro -->
+  <g text-anchor="middle">
+    <!-- Ornamento -->
+    <line x1="500" y1="180" x2="560" y2="180" stroke="#E5A845" stroke-width="1.5" opacity="0.7"/>
+    <text x="600" y="187" font-family="Georgia, serif" font-size="20" fill="#E5A845">✦</text>
+    <line x1="640" y1="180" x2="700" y2="180" stroke="#E5A845" stroke-width="1.5" opacity="0.7"/>
+
+    <!-- Cibo per la (italic, top) -->
+    <text x="600" y="240" font-family="Georgia, serif" font-style="italic" font-weight="500" font-size="46" fill="#8B7867">Cibo per la</text>
+
+    <!-- MENTE (bold, big) -->
+    <text x="600" y="380" font-family="Georgia, serif" font-weight="900" font-size="180" fill="#B8553D" letter-spacing="4">Mente</text>
+
+    <!-- Tagline -->
+    <text x="600" y="445" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#8B7867" letter-spacing="6">IL GIOCO DI OGGI</text>
+  </g>
+
+  <!-- 4 caselle Wordle in basso a tema (4-5-6-7 lettere = colori difficoltà) -->
+  <g>
+    <!-- Tile facile (verde salvia) -->
+    <rect x="430" y="500" width="70" height="70" rx="8" fill="#8FAD7E"/>
+    <text x="465" y="552" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="44" fill="#FBF3E4">P</text>
+
+    <!-- Tile normale (azzurro) -->
+    <rect x="510" y="500" width="70" height="70" rx="8" fill="#6B9CB8"/>
+    <text x="545" y="552" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="44" fill="#FBF3E4">A</text>
+
+    <!-- Tile difficile (ambra) -->
+    <rect x="590" y="500" width="70" height="70" rx="8" fill="#E5A845"/>
+    <text x="625" y="552" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="44" fill="#FBF3E4">R</text>
+
+    <!-- Tile estremo (rust) -->
+    <rect x="670" y="500" width="70" height="70" rx="8" fill="#B8553D"/>
+    <text x="705" y="552" text-anchor="middle" font-family="Georgia, serif" font-weight="900" font-size="44" fill="#FBF3E4">!</text>
+  </g>
+</svg>

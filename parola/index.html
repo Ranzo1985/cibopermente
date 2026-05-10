@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF3E4">
+<title>Parola — Cibo per la Mente</title>
+<meta name="description" content="Indovina la parola del giorno in 6 tentativi. Quattro livelli di difficoltà (4-7 lettere). Un piccolo gioco italiano per allenare la mente.">
+
+<!-- Favicon: tile terracotta con M serif (brand mark) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23D26A4F'/><text x='16' y='24' text-anchor='middle' font-family='Georgia,serif' font-weight='900' font-style='italic' font-size='22' fill='%23FBF3E4'>M</text></svg>">
+
+<!-- Open Graph / WhatsApp / Facebook preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cibo per la Mente — Parola">
+<meta property="og:description" content="Indovina la parola del giorno in 6 tentativi. 4 livelli di difficoltà.">
+<meta property="og:image" content="https://ranzo1985.github.io/cibopermente/parola/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://ranzo1985.github.io/cibopermente/parola/">
+<meta property="og:locale" content="it_IT">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cibo per la Mente — Parola">
+<meta name="twitter:description" content="Indovina la parola del giorno in 6 tentativi.">
+<meta name="twitter:image" content="https://ranzo1985.github.io/cibopermente/parola/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FBF3E4;
+    --bg-warm: #F5E6CB;
+    --card: #FFFAF0;
+    --text: #3D2B1F;
+    --text-muted: #8B7867;
+    --accent-1: #D26A4F;   /* terracotta */
+    --accent-2: #E5A845;   /* amber/saffron */
+    --accent-3: #8FAD7E;   /* sage */
+    --accent-4: #B8553D;   /* rust scuro */
+    --accent-blue: #6B9CB8; /* azzurro estate */
+    --border: #E5D4B8;
+    --border-strong: #D4BD96;
+    --correct: #6B9259;
+    --present: #E5A845;
+    --absent: #B8AB9A;
+    --shadow: 0 2px 8px rgba(61, 43, 31, 0.08);
+    --shadow-lg: 0 4px 18px rgba(61, 43, 31, 0.14);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    background-image:
+      radial-gradient(ellipse at top right, rgba(229,168,69,0.18), transparent 55%),
+      radial-gradient(ellipse at bottom left, rgba(210,106,79,0.14), transparent 55%);
+  }
+  /* Sfondo decorativo: lettere fluttuanti in tono caldo */
+  .bg-letters {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-letters span {
+    position: absolute;
+    font-weight: 900;
+    color: var(--accent-1);
+    opacity: 0.10;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    user-select: none;
+    animation: float 18s ease-in-out infinite;
+    text-transform: uppercase;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(8deg); }
+  }
+  .bg-letters span:nth-child(1)  { top: 4%;  left: 6%;  font-size: 7rem;  animation-delay: 0s; color: var(--accent-1); }
+  .bg-letters span:nth-child(2)  { top: 18%; right: 8%; font-size: 5rem;  animation-delay: -3s; color: var(--accent-2); }
+  .bg-letters span:nth-child(3)  { top: 38%; left: 12%; font-size: 9rem;  animation-delay: -6s; color: var(--accent-3); }
+  .bg-letters span:nth-child(4)  { top: 58%; right: 4%; font-size: 6rem;  animation-delay: -9s; color: var(--accent-1); }
+  .bg-letters span:nth-child(5)  { top: 78%; left: 8%;  font-size: 8rem;  animation-delay: -12s; color: var(--accent-2); }
+  .bg-letters span:nth-child(6)  { top: 88%; right:18%; font-size: 5rem;  animation-delay: -15s; color: var(--accent-3); }
+  .bg-letters span:nth-child(7)  { top: 28%; left: 45%; font-size: 4rem;  animation-delay: -2s; color: var(--accent-blue); }
+  .bg-letters span:nth-child(8)  { top: 68%; left: 50%; font-size: 6rem;  animation-delay: -10s; color: var(--accent-1); }
+  #screen-home > *:not(.bg-letters) { position: relative; z-index: 1; }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    background: rgba(255,250,240,0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  header .brand-mini {
+    text-align: center;
+    line-height: 1;
+  }
+  header .brand-mini .top {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  header .brand-mini .main {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 1.05rem;
+    color: var(--accent-4);
+    letter-spacing: 0.04em;
+  }
+  header .brand-mini .game {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  header button {
+    background: none; border: none; color: var(--text); cursor: pointer;
+    font-size: 1.3rem; padding: 4px 8px;
+  }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 8px;
+    min-height: 0;
+  }
+  #board {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    gap: 6px;
+    width: min(420px, 95vw);
+    max-height: 60vh;
+  }
+  .row { display: grid; gap: 6px; }
+  .cell {
+    background: var(--card);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.4rem, 5.5vw, 2.2rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--text);
+    aspect-ratio: 1 / 1;
+    border-radius: 6px;
+    transition: transform 0.1s;
+  }
+  .cell.filled { border-color: var(--border-strong); animation: pop 0.12s ease-in-out; }
+  .cell.correct { background: var(--correct); border-color: var(--correct); color: #fff; }
+  .cell.present { background: var(--present); border-color: var(--present); color: #fff; }
+  .cell.absent  { background: var(--absent);  border-color: var(--absent);  color: #fff; }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  .row.shake { animation: shake 0.4s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+  }
+  #keyboard {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 4px;
+    flex-shrink: 0;
+  }
+  .krow { display: flex; justify-content: center; gap: 5px; }
+  .key {
+    flex: 1;
+    min-width: 0;
+    height: 52px;
+    background: #EDD9B6;
+    color: var(--text);
+    border: none;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.15s, transform 0.05s;
+    padding: 0;
+    box-shadow: 0 2px 0 rgba(180,150,100,0.4);
+  }
+  .key.wide { flex: 1.5; font-size: 0.7rem; }
+  .key.correct { background: var(--correct); color: #fff; }
+  .key.present { background: var(--present); color: #fff; }
+  .key.absent  { background: var(--absent);  color: #fff; }
+  .key:active { transform: translateY(1px); box-shadow: none; }
+
+  #toast {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--card);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 100;
+    box-shadow: var(--shadow-lg);
+  }
+  #toast.show { opacity: 1; }
+
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(61,43,31,0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 20px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal h2 {
+    margin-top: 0;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--accent-4);
+  }
+  .modal .word {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    margin: 16px 0;
+    color: var(--correct);
+  }
+  .stats { display: flex; justify-content: space-around; margin: 16px 0; }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--accent-4);
+  }
+  .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .modal button {
+    background: var(--accent-1);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 4px;
+    box-shadow: 0 3px 0 var(--accent-4);
+    transition: transform 0.05s;
+  }
+  .modal button:active { transform: translateY(1px); box-shadow: 0 2px 0 var(--accent-4); }
+  .modal button.secondary {
+    background: transparent;
+    color: var(--text-muted);
+    box-shadow: none;
+    border: 1px solid var(--border-strong);
+  }
+  .help-text { text-align: left; font-size: 0.9rem; line-height: 1.6; color: var(--text); }
+  .help-text .ex { display: flex; gap: 4px; margin: 8px 0; }
+  .help-text .ex .cell { width: 32px; height: 32px; font-size: 1rem; border-width: 2px; aspect-ratio: 1; }
+
+  /* ----------- Schermata home + LOGO BRAND ----------- */
+  #screen-home {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at top, rgba(229,168,69,0.30), transparent 55%),
+      radial-gradient(ellipse at bottom, rgba(210,106,79,0.22), transparent 55%),
+      radial-gradient(ellipse at center, rgba(143,173,126,0.10), transparent 60%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 20px;
+    z-index: 200;
+    gap: 14px;
+  }
+  #screen-home.hidden { display: none; }
+
+  .brand-logo {
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .brand-logo .ornaments {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--accent-2);
+    margin-bottom: 4px;
+  }
+  .brand-logo .ornaments .line {
+    height: 1px;
+    width: 32px;
+    background: var(--accent-2);
+    opacity: 0.6;
+  }
+  .brand-logo .top {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+  .brand-logo .main {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(3.2rem, 13vw, 4.5rem);
+    color: var(--accent-4);
+    letter-spacing: 0.02em;
+    margin: 4px 0 6px;
+    text-shadow: 0 2px 0 rgba(184,85,61,0.15);
+  }
+  .brand-logo .tagline {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .brand-logo .tagline b {
+    color: var(--accent-1);
+    font-weight: 700;
+  }
+
+  .difficulty-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    margin-top: 4px;
+  }
+  .difficulty-btn {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid var(--border-strong);
+    background: var(--card);
+    color: var(--text);
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.08s, box-shadow 0.15s;
+    box-shadow: var(--shadow);
+  }
+  .difficulty-btn:active { transform: translateY(1px); }
+  .difficulty-btn .desc { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; margin-top: 2px; text-transform: none; letter-spacing: normal; display: block; }
+  .difficulty-btn .label-block { display: flex; flex-direction: column; }
+  .difficulty-btn .badge {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.08);
+  }
+  .difficulty-btn.facile    { border-color: var(--accent-3); }
+  .difficulty-btn.facile    .badge { background: var(--accent-3); }
+  .difficulty-btn.normale   { border-color: var(--accent-blue); }
+  .difficulty-btn.normale   .badge { background: var(--accent-blue); }
+  .difficulty-btn.difficile { border-color: var(--accent-2); }
+  .difficulty-btn.difficile .badge { background: var(--accent-2); }
+  .difficulty-btn.estremo   { border-color: var(--accent-4); }
+  .difficulty-btn.estremo   .badge { background: var(--accent-4); }
+
+  .help-link {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 8px;
+  }
+  .footer-links {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+  }
+  .footer-link {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .footer-credit { font-style: italic; opacity: 0.8; }
+  .footer-sep { opacity: 0.5; }
+
+  /* Modale Privacy: testo lungo, scroll e leggibilità */
+  #modal-privacy .modal {
+    max-width: 480px;
+    text-align: left;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  #modal-privacy h2 { text-align: center; }
+  #modal-privacy h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--accent-4);
+    margin: 18px 0 6px;
+    font-size: 1rem;
+  }
+  #modal-privacy p, #modal-privacy ul {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    margin: 4px 0;
+  }
+  #modal-privacy ul { padding-left: 20px; }
+  #modal-privacy a { color: var(--accent-1); }
+  #modal-privacy .meta-info {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  #modal-privacy .close-row { text-align: center; margin-top: 16px; }
+</style>
+</head>
+<body>
+  <div id="screen-home">
+    <div class="bg-letters" aria-hidden="true">
+      <span>C</span><span>I</span><span>B</span><span>O</span>
+      <span>M</span><span>E</span><span>N</span><span>T</span>
+    </div>
+    <div class="brand-logo">
+      <div class="ornaments"><span class="line"></span>✦<span class="line"></span></div>
+      <div class="top">Cibo per la</div>
+      <div class="main">Mente</div>
+      <div class="tagline">il gioco di oggi · <b>Parola</b></div>
+    </div>
+    <div class="difficulty-list">
+      <button class="difficulty-btn facile" data-diff="4">
+        <span class="label-block">Facile<span class="desc">4 lettere · 6 tentativi</span></span>
+        <span class="badge">4</span>
+      </button>
+      <button class="difficulty-btn normale" data-diff="5">
+        <span class="label-block">Normale<span class="desc">5 lettere · 6 tentativi</span></span>
+        <span class="badge">5</span>
+      </button>
+      <button class="difficulty-btn difficile" data-diff="6">
+        <span class="label-block">Difficile<span class="desc">6 lettere · 6 tentativi</span></span>
+        <span class="badge">6</span>
+      </button>
+      <button class="difficulty-btn estremo" data-diff="7">
+        <span class="label-block">Estremo<span class="desc">7 lettere · 6 tentativi</span></span>
+        <span class="badge">7</span>
+      </button>
+    </div>
+    <button class="help-link" id="btn-help-home">Come si gioca?</button>
+    <div class="footer-links">
+      <button class="footer-link" id="btn-privacy">Privacy</button>
+      <span class="footer-sep">·</span>
+      <span class="footer-credit">di Davide Miori</span>
+    </div>
+  </div>
+
+  <header>
+    <button id="btn-back" aria-label="Indietro">←</button>
+    <div class="brand-mini">
+      <div class="top">Cibo per la</div>
+      <div class="main">Mente</div>
+      <div class="game" id="diff-label">—</div>
+    </div>
+    <button id="btn-stats" aria-label="Statistiche">📊</button>
+  </header>
+
+  <main>
+    <div id="board"></div>
+    <div id="keyboard"></div>
+  </main>
+
+  <div id="toast"></div>
+
+  <div id="modal-help" class="modal-bg">
+    <div class="modal">
+      <h2>Come si gioca</h2>
+      <div class="help-text">
+        Indovina la <b>PAROLA</b> in 6 tentativi.<br><br>
+        Scegli la difficoltà: <b>4</b> (facile), <b>5</b> (normale), <b>6</b> (difficile) o <b>7</b> lettere (estremo).<br><br>
+        Ogni tentativo deve essere una parola italiana della lunghezza giusta.<br><br>
+        Dopo l'invio i colori mostrano quanto sei vicino:
+        <div class="ex">
+          <div class="cell correct">P</div><div class="cell">R</div><div class="cell">A</div><div class="cell">T</div><div class="cell">O</div>
+        </div>
+        <b>P</b> è nella parola e nella posizione giusta.
+        <div class="ex">
+          <div class="cell">V</div><div class="cell present">E</div><div class="cell">N</div><div class="cell">T</div><div class="cell">O</div>
+        </div>
+        <b>E</b> è nella parola ma in un'altra posizione.
+        <div class="ex">
+          <div class="cell">L</div><div class="cell">A</div><div class="cell">T</div><div class="cell absent">T</div><div class="cell">E</div>
+        </div>
+        <b>T</b> non è nella parola.<br><br>
+        Una parola nuova ogni giorno!
+      </div>
+      <button onclick="closeModal('modal-help')">Ok</button>
+    </div>
+  </div>
+
+  <div id="modal-end" class="modal-bg">
+    <div class="modal">
+      <h2 id="end-title"></h2>
+      <div class="word" id="end-word"></div>
+      <div class="stats">
+        <div class="stat-item"><div class="stat-num" id="s-played">0</div><div class="stat-label">Giocate</div></div>
+        <div class="stat-item"><div class="stat-num" id="s-won">0</div><div class="stat-label">% Vinte</div></div>
+        <div class="stat-item"><div class="stat-num" id="s-streak">0</div><div class="stat-label">Streak</div></div>
+        <div class="stat-item"><div class="stat-num" id="s-max">0</div><div class="stat-label">Max</div></div>
+      </div>
+      <button id="btn-share">📋 Condividi su WhatsApp</button>
+      <button class="secondary" onclick="closeModal('modal-end')">Chiudi</button>
+    </div>
+  </div>
+
+  <div id="modal-privacy" class="modal-bg">
+    <div class="modal">
+      <h2>Privacy</h2>
+      <p>Cibo per la Mente è un piccolo progetto personale, gratuito e senza scopo di lucro. Crediamo che giocare debba essere semplice — e privato.</p>
+
+      <h3>Cosa NON facciamo</h3>
+      <ul>
+        <li>Non chiediamo email, nome o registrazione.</li>
+        <li>Non usiamo cookie di tracciamento né di profilazione.</li>
+        <li>Non vendiamo né condividiamo dati con terzi.</li>
+        <li>Non ti profiliamo né mostriamo pubblicità.</li>
+      </ul>
+
+      <h3>Cosa raccogliamo (e perché)</h3>
+      <p><b>Statistiche di visita anonime</b> tramite Umami Cloud (servizio europeo, privacy-friendly): pagine viste, paese di provenienza, tipo di dispositivo, ed eventi del gioco (partite iniziate, vinte, perse, per livello di difficoltà). Servono solo a capire se il gioco viene usato e da quanti. Il tuo indirizzo IP è usato esclusivamente per derivare il paese, poi scartato. Non sei identificabile.</p>
+
+      <h3>Cosa resta sul tuo dispositivo</h3>
+      <p>Lo stato della partita di oggi e le tue statistiche personali (giocate, vinte, streak) sono salvate <b>solo nel tuo browser</b>, nel <code>localStorage</code>. Non vengono mai inviate a noi né a nessun altro. Per cancellarle: svuota i dati del sito dalle impostazioni del browser.</p>
+
+      <h3>Servizi terzi</h3>
+      <ul>
+        <li><b>GitHub Pages</b> (Microsoft): hosting del sito.</li>
+        <li><b>Umami Cloud</b>: statistiche aggregate anonime — <a href="https://umami.is/privacy" target="_blank" rel="noopener">privacy policy</a>.</li>
+        <li><b>Google Fonts</b>: caricamento dei font Fraunces e Inter.</li>
+      </ul>
+
+      <h3>I tuoi diritti (GDPR)</h3>
+      <p>Anche se non raccogliamo dati personali, hai sempre diritto di chiedere informazioni, modifica o cancellazione di eventuali dati. Scrivi a <a href="mailto:davide.miori@mioriconsulting.com">davide.miori@mioriconsulting.com</a>.</p>
+
+      <div class="meta-info">
+        Titolare del trattamento: Davide Miori<br>
+        Ultimo aggiornamento: 10 maggio 2026
+      </div>
+      <div class="close-row">
+        <button class="secondary" onclick="closeModal('modal-privacy')">Chiudi</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-stats" class="modal-bg">
+    <div class="modal">
+      <h2>Statistiche <span id="stats-diff" style="color:var(--text-muted);font-size:0.9rem;font-weight:400;font-family:'Inter',sans-serif"></span></h2>
+      <div class="stats">
+        <div class="stat-item"><div class="stat-num" id="ss-played">0</div><div class="stat-label">Giocate</div></div>
+        <div class="stat-item"><div class="stat-num" id="ss-won">0</div><div class="stat-label">% Vinte</div></div>
+        <div class="stat-item"><div class="stat-num" id="ss-streak">0</div><div class="stat-label">Streak</div></div>
+        <div class="stat-item"><div class="stat-num" id="ss-max">0</div><div class="stat-label">Max</div></div>
+      </div>
+      <button class="secondary" onclick="closeModal('modal-stats')">Chiudi</button>
+    </div>
+  </div>
+
+<!-- Umami Cloud analytics (no cookie, GDPR-ok) -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="a8689239-9418-4553-a404-7074164c6571"></script>
+
+<script src="parole.js"></script>
+<script>
+  const ROWS = 6;
+  const EPOCH = new Date(2026, 4, 10);
+  const DIFF_LABELS = { 4: 'Facile · 4 lettere', 5: 'Normale · 5 lettere', 6: 'Difficile · 6 lettere', 7: 'Estremo · 7 lettere' };
+
+  let COLS = 5;
+  let SOLUZIONI = [], ACCETTATE = new Set();
+  let SOLUTION = '';
+  let dayIdx = 0;
+  let state, stats;
+  let current = '';
+  let locked = false;
+
+  const stateKey = (d) => `cpm_parola_state_${d}`;
+  const statsKey = (d) => `cpm_parola_stats_${d}`;
+
+  function todayIndex(arrLen) {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const days = Math.floor((today - EPOCH) / 86400000);
+    return ((days % arrLen) + arrLen) % arrLen;
+  }
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  function loadState() {
+    try {
+      const s = JSON.parse(localStorage.getItem(stateKey(COLS)));
+      if (s && s.date === todayStr()) return s;
+    } catch(e) {}
+    return { date: todayStr(), guesses: [], won: false, finished: false };
+  }
+  function saveState() { localStorage.setItem(stateKey(COLS), JSON.stringify(state)); }
+  function loadStats() {
+    try {
+      const s = JSON.parse(localStorage.getItem(statsKey(COLS)));
+      if (s) return s;
+    } catch(e) {}
+    return { played: 0, won: 0, currentStreak: 0, maxStreak: 0, lastWonDate: null, distribution: [0,0,0,0,0,0] };
+  }
+  function saveStats() { localStorage.setItem(statsKey(COLS), JSON.stringify(stats)); }
+
+  function track(eventName, data) {
+    try { if (window.umami) window.umami.track(eventName, data); } catch(e) {}
+  }
+
+  function startGame(diff) {
+    track('game-start', { difficulty: diff });
+    COLS = diff;
+    SOLUZIONI = LISTE[COLS].soluzioni;
+    ACCETTATE = LISTE[COLS].accettate;
+    dayIdx = todayIndex(SOLUZIONI.length);
+    SOLUTION = SOLUZIONI[dayIdx];
+    state = loadState();
+    stats = loadStats();
+    current = '';
+    locked = false;
+    document.getElementById('diff-label').textContent = DIFF_LABELS[COLS];
+    document.getElementById('screen-home').classList.add('hidden');
+    buildBoard();
+    buildKeyboard();
+    restoreGame();
+    localStorage.setItem('cpm_last_diff', COLS);
+  }
+
+  function backToHome() {
+    document.getElementById('screen-home').classList.remove('hidden');
+    closeModal('modal-end');
+  }
+
+  function buildBoard() {
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+    board.style.aspectRatio = `${COLS} / ${ROWS}`;
+    for (let r = 0; r < ROWS; r++) {
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.id = `row-${r}`;
+      row.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+      for (let c = 0; c < COLS; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.id = `cell-${r}-${c}`;
+        row.appendChild(cell);
+      }
+      board.appendChild(row);
+    }
+  }
+
+  function buildKeyboard() {
+    const layout = ['QWERTYUIOP', 'ASDFGHJKL', '↵ZXCVBNM⌫'];
+    const kb = document.getElementById('keyboard');
+    kb.innerHTML = '';
+    layout.forEach(rowStr => {
+      const row = document.createElement('div');
+      row.className = 'krow';
+      [...rowStr].forEach(ch => {
+        const btn = document.createElement('button');
+        btn.className = 'key';
+        if (ch === '↵') { btn.classList.add('wide'); btn.textContent = 'INVIO'; btn.dataset.key = 'ENTER'; }
+        else if (ch === '⌫') { btn.classList.add('wide'); btn.textContent = 'CANC'; btn.dataset.key = 'BACK'; }
+        else { btn.textContent = ch; btn.dataset.key = ch; btn.id = `key-${ch}`; }
+        btn.addEventListener('click', () => handleKey(btn.dataset.key));
+        row.appendChild(btn);
+      });
+      kb.appendChild(row);
+    });
+  }
+
+  function handleKey(k) {
+    if (locked || !state || state.finished) return;
+    if (k === 'ENTER') return submitGuess();
+    if (k === 'BACK') {
+      current = current.slice(0, -1);
+      renderCurrent();
+      return;
+    }
+    if (current.length < COLS && /^[A-Z]$/.test(k)) {
+      current += k;
+      renderCurrent();
+    }
+  }
+
+  function renderCurrent() {
+    const r = state.guesses.length;
+    for (let c = 0; c < COLS; c++) {
+      const cell = document.getElementById(`cell-${r}-${c}`);
+      const ch = current[c] || '';
+      cell.textContent = ch;
+      cell.classList.toggle('filled', !!ch);
+    }
+  }
+
+  function submitGuess() {
+    if (current.length !== COLS) {
+      shake();
+      toast(`Servono ${COLS} lettere`);
+      return;
+    }
+    if (!ACCETTATE.has(current)) {
+      shake();
+      toast('Parola non riconosciuta');
+      return;
+    }
+    const guess = current;
+    const colors = computeColors(guess, SOLUTION);
+    paintRow(state.guesses.length, guess, colors);
+    state.guesses.push(guess);
+    current = '';
+    if (guess === SOLUTION) {
+      state.won = true;
+      state.finished = true;
+      updateStats(true);
+      saveState();
+      track('game-won', { difficulty: COLS, tries: state.guesses.length });
+      setTimeout(() => showEnd(true), COLS * 250 + 400);
+    } else if (state.guesses.length >= ROWS) {
+      state.finished = true;
+      updateStats(false);
+      saveState();
+      track('game-lost', { difficulty: COLS });
+      setTimeout(() => showEnd(false), COLS * 250 + 400);
+    } else {
+      saveState();
+    }
+  }
+
+  function computeColors(guess, sol) {
+    const colors = Array(COLS).fill('absent');
+    const remaining = {};
+    for (let i = 0; i < COLS; i++) {
+      if (guess[i] === sol[i]) colors[i] = 'correct';
+      else remaining[sol[i]] = (remaining[sol[i]] || 0) + 1;
+    }
+    for (let i = 0; i < COLS; i++) {
+      if (colors[i] === 'correct') continue;
+      const ch = guess[i];
+      if (remaining[ch] > 0) {
+        colors[i] = 'present';
+        remaining[ch]--;
+      }
+    }
+    return colors;
+  }
+
+  function paintRow(r, guess, colors) {
+    locked = true;
+    for (let c = 0; c < COLS; c++) {
+      setTimeout(() => {
+        const cell = document.getElementById(`cell-${r}-${c}`);
+        cell.classList.add(colors[c]);
+        updateKeyColor(guess[c], colors[c]);
+        if (c === COLS - 1) locked = false;
+      }, c * 250);
+    }
+  }
+
+  const colorRank = { absent: 0, present: 1, correct: 2 };
+  function updateKeyColor(ch, color) {
+    const k = document.getElementById(`key-${ch}`);
+    if (!k) return;
+    const cur = ['correct','present','absent'].find(x => k.classList.contains(x));
+    if (!cur || colorRank[color] > colorRank[cur]) {
+      k.classList.remove('correct','present','absent');
+      k.classList.add(color);
+    }
+  }
+
+  function updateStats(won) {
+    stats.played++;
+    if (won) {
+      stats.won++;
+      stats.distribution[state.guesses.length - 1]++;
+      const yest = new Date(); yest.setDate(yest.getDate() - 1);
+      const yStr = `${yest.getFullYear()}-${String(yest.getMonth()+1).padStart(2,'0')}-${String(yest.getDate()).padStart(2,'0')}`;
+      if (stats.lastWonDate === yStr || stats.lastWonDate === todayStr()) stats.currentStreak++;
+      else stats.currentStreak = 1;
+      stats.lastWonDate = todayStr();
+      if (stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak;
+    } else {
+      stats.currentStreak = 0;
+    }
+    saveStats();
+  }
+
+  function showEnd(won) {
+    document.getElementById('end-title').textContent = won ? '🎉 Bravo!' : '😅 Quasi!';
+    document.getElementById('end-word').textContent = SOLUTION;
+    fillStats('s-');
+    openModal('modal-end');
+  }
+  function fillStats(prefix) {
+    document.getElementById(prefix+'played').textContent = stats.played;
+    document.getElementById(prefix+'won').textContent = stats.played ? Math.round(100*stats.won/stats.played) : 0;
+    document.getElementById(prefix+'streak').textContent = stats.currentStreak;
+    document.getElementById(prefix+'max').textContent = stats.maxStreak;
+  }
+
+  function shareText() {
+    const score = state.won ? state.guesses.length : 'X';
+    const lines = state.guesses.map(g => {
+      const cs = computeColors(g, SOLUTION);
+      return cs.map(c => c === 'correct' ? '🟩' : c === 'present' ? '🟨' : '⬛').join('');
+    }).join('\n');
+    return `Cibo per la Mente — Parola (${DIFF_LABELS[COLS]}) #${dayIdx + 1}\n${score}/6\n\n${lines}\n\n${location.href}`;
+  }
+
+  document.getElementById('btn-share').addEventListener('click', async () => {
+    const text = shareText();
+    if (navigator.share) {
+      try { await navigator.share({ text }); return; } catch(e) {}
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      toast('Risultato copiato!');
+    } catch(e) {
+      toast('Copia manuale dalla schermata');
+    }
+  });
+
+  function shake() {
+    const r = document.getElementById(`row-${state.guesses.length}`);
+    r.classList.add('shake');
+    setTimeout(() => r.classList.remove('shake'), 400);
+  }
+  let toastTimer;
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+  }
+  function openModal(id) { document.getElementById(id).classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+  document.querySelectorAll('.difficulty-btn[data-diff]').forEach(btn => {
+    btn.addEventListener('click', () => startGame(parseInt(btn.dataset.diff, 10)));
+  });
+  document.getElementById('btn-help-home').addEventListener('click', () => openModal('modal-help'));
+  document.getElementById('btn-privacy').addEventListener('click', () => openModal('modal-privacy'));
+  document.getElementById('btn-back').addEventListener('click', backToHome);
+  document.getElementById('btn-stats').addEventListener('click', () => {
+    document.getElementById('stats-diff').textContent = DIFF_LABELS[COLS];
+    fillStats('ss-');
+    openModal('modal-stats');
+  });
+
+  document.addEventListener('keydown', e => {
+    if (document.getElementById('screen-home').classList.contains('hidden') === false) return;
+    if (e.key === 'Enter') handleKey('ENTER');
+    else if (e.key === 'Backspace') handleKey('BACK');
+    else if (/^[a-zA-Z]$/.test(e.key)) handleKey(e.key.toUpperCase());
+  });
+
+  function restoreGame() {
+    state.guesses.forEach((g, r) => {
+      const cs = computeColors(g, SOLUTION);
+      for (let c = 0; c < COLS; c++) {
+        const cell = document.getElementById(`cell-${r}-${c}`);
+        cell.textContent = g[c];
+        cell.classList.add('filled', cs[c]);
+        updateKeyColor(g[c], cs[c]);
+      }
+    });
+    if (state.finished) setTimeout(() => showEnd(state.won), 300);
+  }
+</script>
+</body>
+</html>
