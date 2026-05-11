@@ -60,8 +60,13 @@
   body {
     display: flex;
     flex-direction: column;
+    /* svh = "small viewport" — l'area minima visibile assumendo che TUTTE le barre
+       del browser siano visibili. Su Samsung Internet questo evita che la toolbar
+       inferiore copra parte della tastiera. Fallback per browser vecchi: vh. */
     height: 100vh;
     height: 100dvh;
+    height: 100svh;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     background-image:
       radial-gradient(ellipse at top right, rgba(229,168,69,0.18), transparent 55%),
       radial-gradient(ellipse at bottom left, rgba(210,106,79,0.14), transparent 55%);
@@ -145,25 +150,32 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px 8px;
+    padding: 6px 8px 8px;
     min-height: 0;
     overflow: hidden;
+    gap: 6px;
+  }
+  /* Wrapper che assorbe TUTTO lo spazio verticale rimasto tra header e tastiera.
+     Il board dentro si dimensiona in base a height (100% del wrapper) mantenendo
+     l'aspect-ratio. Se il risultato eccede la larghezza viewport, browser clampa
+     a max-width e ricalcola l'altezza. Niente formule con dvh: il browser fa il calcolo. */
+  .board-wrap {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
   }
   #board {
     --cols: 5;
     display: grid;
     grid-template-rows: repeat(6, 1fr);
-    gap: 6px;
-    /* Larghezza limitata sia da viewport (95vw) sia da altezza disponibile dopo header+tastiera (~290px).
-       Cosi' il board non spinge mai giu' la tastiera. */
-    width: min(
-      420px,
-      95vw,
-      calc((100dvh - 290px) * var(--cols) / 6)
-    );
+    gap: 5px;
     aspect-ratio: var(--cols) / 6;
-    margin: auto 0;
+    height: 100%;
+    width: auto;
+    max-width: min(420px, 95vw);
   }
   .row { display: grid; gap: 6px; }
   .cell {
@@ -552,7 +564,9 @@
   </header>
 
   <main>
-    <div id="board"></div>
+    <div class="board-wrap">
+      <div id="board"></div>
+    </div>
     <div id="keyboard"></div>
   </main>
 
