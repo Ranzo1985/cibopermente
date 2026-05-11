@@ -148,13 +148,22 @@
     justify-content: space-between;
     padding: 10px 8px;
     min-height: 0;
+    overflow: hidden;
   }
   #board {
+    --cols: 5;
     display: grid;
     grid-template-rows: repeat(6, 1fr);
     gap: 6px;
-    width: min(420px, 95vw);
-    max-height: 60vh;
+    /* Larghezza limitata sia da viewport (95vw) sia da altezza disponibile dopo header+tastiera (~290px).
+       Cosi' il board non spinge mai giu' la tastiera. */
+    width: min(
+      420px,
+      95vw,
+      calc((100dvh - 290px) * var(--cols) / 6)
+    );
+    aspect-ratio: var(--cols) / 6;
+    margin: auto 0;
   }
   .row { display: grid; gap: 6px; }
   .cell {
@@ -733,7 +742,7 @@
   function buildBoard() {
     const board = document.getElementById('board');
     board.innerHTML = '';
-    board.style.aspectRatio = `${COLS} / ${ROWS}`;
+    board.style.setProperty('--cols', COLS);
     for (let r = 0; r < ROWS; r++) {
       const row = document.createElement('div');
       row.className = 'row';
