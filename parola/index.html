@@ -155,10 +155,9 @@
     overflow: hidden;
     gap: 6px;
   }
-  /* Wrapper che assorbe TUTTO lo spazio verticale rimasto tra header e tastiera.
-     Il board dentro si dimensiona in base a height (100% del wrapper) mantenendo
-     l'aspect-ratio. Se il risultato eccede la larghezza viewport, browser clampa
-     a max-width e ricalcola l'altezza. Niente formule con dvh: il browser fa il calcolo. */
+  /* Wrapper che misura lo spazio reale disponibile.
+     Il cell-size viene calcolato in JS (vedi fitBoard) e applicato come
+     CSS variable --cell-size. Cosi' niente quirks CSS cross-browser. */
   .board-wrap {
     flex: 1 1 0;
     min-height: 0;
@@ -166,18 +165,20 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+    overflow: hidden;
   }
   #board {
-    --cols: 5;
-    display: grid;
-    grid-template-rows: repeat(6, 1fr);
-    gap: 5px;
-    aspect-ratio: var(--cols) / 6;
-    height: 100%;
-    width: auto;
-    max-width: min(420px, 95vw);
+    --cell-size: 60px;
+    --cell-gap: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--cell-gap);
   }
-  .row { display: grid; gap: 6px; }
+  .row {
+    display: flex;
+    gap: var(--cell-gap);
+    justify-content: center;
+  }
   .cell {
     background: var(--card);
     border: 2px solid var(--border);
@@ -185,11 +186,13 @@
     align-items: center;
     justify-content: center;
     font-family: 'Fraunces', serif;
-    font-size: clamp(1.4rem, 5.5vw, 2.2rem);
+    font-size: calc(var(--cell-size) * 0.5);
     font-weight: 900;
     text-transform: uppercase;
     color: var(--text);
-    aspect-ratio: 1 / 1;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    flex-shrink: 0;
     border-radius: 6px;
     transition: transform 0.1s;
   }
@@ -742,9 +745,15 @@
     locked = false;
     document.getElementById('diff-label').textContent = DIFF_LABELS[COLS];
     document.getElementById('screen-home').classList.add('hidden');
-    buildBoard();
+    // Costruisco PRIMA la tastiera (occupa la sua altezza fissa), poi misuro
+    // lo spazio rimasto e infine costruisco la board con cell-size giusto.
     buildKeyboard();
-    restoreGame();
+    document.getElementById('board').innerHTML = '';
+    requestAnimationFrame(() => {
+      fitBoard();
+      buildBoard();
+      restoreGame();
+    });
     localStorage.setItem('cpm_last_diff', COLS);
   }
 
@@ -756,12 +765,10 @@
   function buildBoard() {
     const board = document.getElementById('board');
     board.innerHTML = '';
-    board.style.setProperty('--cols', COLS);
     for (let r = 0; r < ROWS; r++) {
       const row = document.createElement('div');
       row.className = 'row';
       row.id = `row-${r}`;
-      row.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
       for (let c = 0; c < COLS; c++) {
         const cell = document.createElement('div');
         cell.className = 'cell';
@@ -770,6 +777,23 @@
       }
       board.appendChild(row);
     }
+  }
+
+  /* Calcola la dimensione ottimale delle caselle in base allo spazio
+     effettivamente disponibile (misurato post-layout). Evita le quirk
+     CSS aspect-ratio/flex cross-browser su cui non possiamo fare affidamento. */
+  function fitBoard() {
+    const wrap = document.querySelector('.board-wrap');
+    const board = document.getElementById('board');
+    if (!wrap || !board || !COLS) return;
+    const w = wrap.clientWidth;
+    const h = wrap.clientHeight;
+    const gap = 5;
+    const maxByW = Math.floor((w - (COLS - 1) * gap) / COLS);
+    const maxByH = Math.floor((h - (ROWS - 1) * gap) / ROWS);
+    // cell size: il massimo che ci sta in larghezza/altezza, capped tra 28 (leggibile) e 68 (mai gigante)
+    const cellSize = Math.max(28, Math.min(maxByW, maxByH, 68));
+    board.style.setProperty('--cell-size', cellSize + 'px');
   }
 
   function buildKeyboard() {
@@ -977,6 +1001,20 @@
     else if (e.key === 'Backspace') handleKey('BACK');
     else if (/^[a-zA-Z]$/.test(e.key)) handleKey(e.key.toUpperCase());
   });
+
+  // Ricalcolo cell-size quando il viewport cambia (rotazione, ridimensionamento, comparsa toolbar)
+  let resizeTimer;
+  function scheduleFit() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(fitBoard, 100);
+  }
+  window.addEventListener('resize', scheduleFit);
+  window.addEventListener('orientationchange', scheduleFit);
+  // Su alcuni browser mobile l'altezza del viewport cambia con scroll (comparsa/scomparsa URL bar):
+  // VisualViewport API e' lo standard per intercettarlo
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', scheduleFit);
+  }
 
   function restoreGame() {
     state.guesses.forEach((g, r) => {
